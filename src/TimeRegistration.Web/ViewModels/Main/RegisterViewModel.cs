@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TimeRegistration.Web.Models;
+using TimeRegistration.BusinessLogic.Models;
 
 namespace TimeRegistration.Web.ViewModels.Main
 {
@@ -9,17 +9,17 @@ namespace TimeRegistration.Web.ViewModels.Main
     {
         public IList<Customer> CustomersAndProjects { get; set; }
 
-        public IList<string> AllCustomers { get; set; }
+        public IList<Customer> AllCustomers { get; set; }
 
-        public IList<string> AllProjects { get; set; }
+        public IList<Project> AllProjects { get; set; }
 
         [Required]
         [Display(Name = "Select Customer")]
-        public string Customer { get; set; }
+        public Guid CustomerId { get; set; }
 
         [Required]
         [Display(Name = "Select Project")]
-        public string Project { get; set; }
+        public Guid ProjectId { get; set; }
 
         [Required]
         [Display(Name = "Choose Date")]

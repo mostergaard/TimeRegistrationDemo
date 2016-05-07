@@ -3,6 +3,8 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TimeRegistration.BusinessLogic.Interfaces;
+using TimeRegistration.BusinessLogic.Repositories;
 
 namespace TimeRegistration.Web
 {
@@ -22,6 +24,7 @@ namespace TimeRegistration.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddSingleton<IRepository, InMemoryRepository>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
