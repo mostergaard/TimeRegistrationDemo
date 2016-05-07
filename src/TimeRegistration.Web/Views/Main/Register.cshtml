@@ -1,7 +1,55 @@
-﻿@{
+﻿@model TimeRegistration.Web.ViewModels.Main.RegisterViewModel
+@{
     ViewData["Title"] = "Register Time";
 }
 
+<script>
+    var customersAndProjects = @(Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.CustomersAndProjects)));
+</script>
+
+
 <h1>Register time</h1>
 
-<p>Here will be the registration form.</p>
+<form asp-controller="Main" asp-action="Register" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Customer" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="Customer" asp-items="@(new SelectList(Model.AllCustomers))" class="form-control"></select>
+            <span asp-validation-for="Customer" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Project" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="Project" asp-items="@(new SelectList(Model.AllProjects))" class="form-control"></select>
+            <span asp-validation-for="Project" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Date" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Date" class="form-control" />
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Hours" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Hours" class="form-control" />
+            <span asp-validation-for="Hours" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Notes" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Notes" class="form-control" />
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-default">Register</button>
+        </div>
+    </div>
+</form>

@@ -45,7 +45,7 @@ namespace TimeRegistration.Web
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{action}/{id?}",
+                    template: "{action}",
                     defaults: new {controller = "Main", action = "Default"});
             });
         }
