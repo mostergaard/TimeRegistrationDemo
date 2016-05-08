@@ -17,7 +17,8 @@ namespace TimeRegistration.BusinessLogic.Repositories
             CreateSampleData().Wait();
         }
 
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously. Not needed here, but will be used for real calls to DB
+// Async method lacks 'await' operators and will run synchronously. Not needed here, but will be used for real calls to DB
+#pragma warning disable CS1998
 
         private async Task CreateSampleData()
         {
@@ -123,10 +124,10 @@ namespace TimeRegistration.BusinessLogic.Repositories
                 });
         }
 
-        public async Task<IEnumerable<Customer>> GetAllCustomers()
+        public async Task<Customer[]> GetAllCustomers()
         {
             // Note: No locking needed as the customers list is read-only right now
-            return this.customers;
+            return this.customers.ToArray();
         }
 
         public async Task AddRegistration(Guid customerId, Guid projectId, Registration registration)
@@ -164,17 +165,14 @@ namespace TimeRegistration.BusinessLogic.Repositories
             }
         }
 
-        public async Task<IList<RegistrationWithContext>> GetRegistrationsForDateTimeRange(DateTime minDate, DateTime maxDate)
+        public async Task<RegistrationWithContext[]> GetRegistrationsForDateRange(DateTime minDate, DateTime maxDate)
         {
-            RegistrationWithContext[] result;
             lock (this)
             {
-                result = this.registrations
+                return this.registrations
                     .Where(x => x.Registration.Date >= minDate && x.Registration.Date <= maxDate)
                     .ToArray();
             }
-
-            return result;
         }
 
         public async Task<DateTime?> GetEarliestRegistrationDate()
@@ -193,6 +191,6 @@ namespace TimeRegistration.BusinessLogic.Repositories
             }
         }
 
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+#pragma warning restore CS1998
     }
 }

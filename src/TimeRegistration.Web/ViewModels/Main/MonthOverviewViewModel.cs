@@ -6,9 +6,10 @@ namespace TimeRegistration.Web.ViewModels.Main
     public class PossibleMonth
     {
         public string Name { get; set; }
-        public int MonthNumber { get; set; }
 
+        public int MonthNumber { get; set; }
     }
+
     public class MonthOverviewViewModel
     {
         public IList<string> PossibleYears { get; set; }

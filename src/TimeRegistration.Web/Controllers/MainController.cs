@@ -20,7 +20,9 @@ namespace TimeRegistration.Web.Controllers
             this.repository = repository;
             this.reportGeneratorService = reportGeneratorService;
 
-            this.monthNames = Enumerable.Range(1, 12).Select(x => new DateTime(2000, x, 1).ToString("MMMM", CultureInfo.InvariantCulture)).ToArray();
+            this.monthNames = Enumerable.Range(1, 12)
+                .Select(month => new DateTime(DateTime.Today.Year, month, 1).ToString("MMMM", CultureInfo.InvariantCulture))
+                .ToArray();
         }
 
         public IActionResult Default()
@@ -35,16 +37,14 @@ namespace TimeRegistration.Web.Controllers
 
         public async Task<IActionResult> MonthOverview(int year = 0, int month = 0)
         {
-            if (year == 0)
+            // If no parameters, default to current month
+            if (year == 0 || month == 0)
             {
                 year = DateTime.Today.Year;
-            }
-
-            if (month == 0)
-            {
                 month = DateTime.Today.Month;
             }
 
+            // Get the first and last date we have registrations for
             var minDate = await this.repository.GetEarliestRegistrationDate();
             var maxDate = await this.repository.GetLatestRegistrationDate();
 
@@ -62,7 +62,7 @@ namespace TimeRegistration.Web.Controllers
                 });
             }
 
-            // Get date to view report for that is within the range of used dates
+            // Make sure the report date is within the range of used dates - if not, move to the closest
             var viewDate = new DateTime(year, month, 1);
             if (viewDate < minDate)
             {
@@ -73,16 +73,17 @@ namespace TimeRegistration.Web.Controllers
                 viewDate = maxDate.Value;
             }
 
-            // For the selected year, get the months to display
-            var startMonth = new[] { minDate.Value, new DateTime(viewDate.Year, 1, 1) }.Max();
-            var endMonth = new[] { maxDate.Value, new DateTime(viewDate.Year, 12, 1) }.Min();
+            // For the selected year, get the range of months to display
+            var firstMonth = MaxDate(minDate.Value, new DateTime(viewDate.Year, 1, 1)).Month;
+            var lastMonth = MinDate(maxDate.Value, new DateTime(viewDate.Year, 12, 1)).Month;
 
+            // Finally, generate the ViewModel
             return View(new MonthOverviewViewModel
             {
                 PossibleYears = Enumerable.Range(minDate.Value.Year, maxDate.Value.Year - minDate.Value.Year + 1)
                     .Select(x => x.ToString())
                     .ToArray(),
-                PossibleMonths = Enumerable.Range(startMonth.Month, endMonth.Month - startMonth.Month + 1)
+                PossibleMonths = Enumerable.Range(firstMonth, lastMonth - firstMonth + 1)
                     .Select(x => new PossibleMonth
                         {
                             Name = this.monthNames[x - 1],
@@ -96,17 +97,28 @@ namespace TimeRegistration.Web.Controllers
             });
         }
 
+        public async Task<IActionResult> ProjectList(Guid customerId)
+        {
+            var customers = await this.repository.GetAllCustomers();
+            var projects = customers.FirstOrDefault(x => x.CustomerId == customerId)?.Projects;
+
+            if (projects != null)
+            {
+                return Json(projects.Select(x => new { id = x.ProjectId, name = x.Name }).ToList());
+            }
+            else
+            {
+                return Json(new object[0]);
+            }
+        }
+
         public async Task<IActionResult> Register()
         {
-            // TODO: Add some jQuery magic on the page to refresh the list of possible projects per customer
-
-            var customers = (await this.repository.GetAllCustomers()).ToArray();
+            var customers = await this.repository.GetAllCustomers();
 
             var model = new RegisterViewModel
             {
-                CustomersAndProjects = customers,
-                AllCustomers = customers,
-                AllProjects = customers.SelectMany(x => x.Projects).ToList(),
+                PossibleCustomers = customers,
                 CustomerId = customers.First().CustomerId,
                 ProjectId = customers.First().Projects.First().ProjectId,
                 Date = DateTime.Today,
@@ -133,14 +145,21 @@ namespace TimeRegistration.Web.Controllers
                 return RedirectToAction("MonthOverview");
             }
 
-            // We have lost the list of possible selections, so rebuild
-            var customers = (await this.repository.GetAllCustomers()).ToArray();
-            model.CustomersAndProjects = customers;
-            model.AllCustomers = customers;
-            model.AllProjects = customers.SelectMany(x => x.Projects).ToList();
+            // We have lost the list of possible customers, so rebuild
+            model.PossibleCustomers = await this.repository.GetAllCustomers();
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        private DateTime MinDate(params DateTime[] items)
+        {
+            return items.Min();
+        }
+
+        private DateTime MaxDate(params DateTime[] items)
+        {
+            return items.Max();
         }
     }
 }

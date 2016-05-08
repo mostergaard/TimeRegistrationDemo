@@ -13,6 +13,8 @@
 
 <h1>Monthly Overview</h1>
 
+<br />
+
 <form asp-controller="Main" asp-action="MonthOverview" method="get" role="form" class="form-inline" asp-antiforgery="false">
 
     <div class="form-group">
@@ -30,11 +32,14 @@
 </form>
 
 <hr />
+
 <h2>Report for @Model.SelectedMonthName @Model.SelectedYear</h2>
+
+<br />
 
 @if (Model.Report == null || !Model.Report.Customers.Any())
 {
-    <p>No data found for this period</p>
+    <p>No data found for this period.</p>
 }
 else
 {
@@ -63,7 +68,7 @@ else
             <td></td>
             <td></td>
             <td>
-                @registration.Date.ToShortDateString()
+                @registration.Date.ToString("dd-MM-yyyy")
                 @if (!string.IsNullOrWhiteSpace(registration.Notes))
                 {
                     <br />
@@ -88,6 +93,8 @@ else
 
     </table>
 }
+
+<br />
 
 @section Scripts {
 <script>

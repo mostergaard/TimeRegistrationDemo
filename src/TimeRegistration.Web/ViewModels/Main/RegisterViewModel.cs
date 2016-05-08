@@ -7,11 +7,7 @@ namespace TimeRegistration.Web.ViewModels.Main
 {
     public class RegisterViewModel
     {
-        public IList<Customer> CustomersAndProjects { get; set; }
-
-        public IList<Customer> AllCustomers { get; set; }
-
-        public IList<Project> AllProjects { get; set; }
+        public IList<Customer> PossibleCustomers { get; set; }
 
         [Required]
         [Display(Name = "Select Customer")]
