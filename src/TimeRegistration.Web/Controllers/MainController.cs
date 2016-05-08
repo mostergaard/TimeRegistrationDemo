@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
@@ -10,13 +11,16 @@ namespace TimeRegistration.Web.Controllers
 {
     public class MainController : Controller
     {
-        private IRepository repository;
-        private IReportGeneratorService reportGeneratorService;
+        private readonly IRepository repository;
+        private readonly IReportGeneratorService reportGeneratorService;
+        private readonly string[] monthNames;
 
         public MainController(IRepository repository, IReportGeneratorService reportGeneratorService)
         {
             this.repository = repository;
             this.reportGeneratorService = reportGeneratorService;
+
+            this.monthNames = Enumerable.Range(1, 12).Select(x => new DateTime(2000, x, 1).ToString("MMMM", CultureInfo.InvariantCulture)).ToArray();
         }
 
         public IActionResult Default()
@@ -36,9 +40,6 @@ namespace TimeRegistration.Web.Controllers
                 month = DateTime.Today.Month;
             }
 
-            // TODO: Move to constructor and use english names
-            var monthNames = Enumerable.Range(1, 12).Select(x => new DateTime(2000, x, 1).ToString("MMMM")).ToArray();
-
             var minDate = this.repository.GetEarliestRegistrationDate();
             var maxDate = this.repository.GetLatestRegistrationDate();
 
@@ -48,10 +49,10 @@ namespace TimeRegistration.Web.Controllers
                 return View(new MonthOverviewViewModel
                 {
                     PossibleYears = new[] { year.ToString() },
-                    PossibleMonths = new[] { new PossibleMonth { MonthNumber = month, Name = monthNames[month - 1] } },
+                    PossibleMonths = new[] { new PossibleMonth { MonthNumber = month, Name = this.monthNames[month - 1] } },
                     SelectedYear = year,
                     SelectedMonth = month,
-                    SelectedMonthName = monthNames[month-1],
+                    SelectedMonthName = this.monthNames[month-1],
                     Report = null
                 });
             }
@@ -79,13 +80,13 @@ namespace TimeRegistration.Web.Controllers
                 PossibleMonths = Enumerable.Range(startMonth.Month, endMonth.Month - startMonth.Month + 1)
                     .Select(x => new PossibleMonth
                         {
-                            Name = monthNames[x - 1],
+                            Name = this.monthNames[x - 1],
                             MonthNumber = x
                         })
                     .ToArray(),
                 SelectedYear = viewDate.Year,
                 SelectedMonth = viewDate.Month,
-                SelectedMonthName = monthNames[viewDate.Month - 1],
+                SelectedMonthName = this.monthNames[viewDate.Month - 1],
                 Report = this.reportGeneratorService.GetMonthReport(viewDate.Year, viewDate.Month)
             });
         }
