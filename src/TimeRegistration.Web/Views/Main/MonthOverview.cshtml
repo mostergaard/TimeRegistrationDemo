@@ -3,6 +3,12 @@
     ViewData["Title"] = "Month Overview";
 }
 
+<br />
+
+<div class="pull-right">
+    <a asp-controller="Main" asp-action="Register" class="btn btn-primary btn-lg">Add new time registration</a>
+</div>
+
 <h1>Monthly Overview</h1>
 
 <form asp-controller="Main" asp-action="MonthOverview" method="get" role="form" class="form-inline" asp-antiforgery="false">
