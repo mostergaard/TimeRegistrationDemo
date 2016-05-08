@@ -14,6 +14,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeRegistration.Web", "src
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeRegistration.BusinessLogic", "src\TimeRegistration.BusinessLogic\TimeRegistration.BusinessLogic.xproj", "{24711A97-AB9F-4A1A-BBDC-F45D7334078A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AFA2CD81-2DC3-4028-9D07-8B890313EB73}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TimeRegistration.WebTests", "test\TimeRegistration.WebTests\TimeRegistration.WebTests.xproj", "{353A94D6-656B-4C86-92FC-D20A3B431DCF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +32,10 @@ Global
 		{24711A97-AB9F-4A1A-BBDC-F45D7334078A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24711A97-AB9F-4A1A-BBDC-F45D7334078A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24711A97-AB9F-4A1A-BBDC-F45D7334078A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353A94D6-656B-4C86-92FC-D20A3B431DCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353A94D6-656B-4C86-92FC-D20A3B431DCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353A94D6-656B-4C86-92FC-D20A3B431DCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353A94D6-656B-4C86-92FC-D20A3B431DCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -35,5 +43,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{87D1130E-0D86-41EE-8A55-F02D9DBD4374} = {3C555641-4765-465B-84B6-40801582AC2D}
 		{24711A97-AB9F-4A1A-BBDC-F45D7334078A} = {3C555641-4765-465B-84B6-40801582AC2D}
+		{353A94D6-656B-4C86-92FC-D20A3B431DCF} = {AFA2CD81-2DC3-4028-9D07-8B890313EB73}
 	EndGlobalSection
 EndGlobal

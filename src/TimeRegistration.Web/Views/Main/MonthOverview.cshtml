@@ -1,7 +1,55 @@
-﻿@{
+﻿@model TimeRegistration.Web.ViewModels.Main.MonthOverviewViewModel
+@{
     ViewData["Title"] = "Month Overview";
 }
 
 <h1>Monthly Overview</h1>
 
-<p>Here you will the overview of time register per month.</p>
+<form asp-controller="Main" asp-action="MonthOverview" method="get" role="form" class="form-inline" asp-antiforgery="false">
+
+    <div class="form-group">
+        <label for="SelectedYear">Year</label>
+        <select asp-for="SelectedYear" asp-items="@(new SelectList(Model.PossibleYears))" asp- name="year" class="form-control"></select>
+    </div>
+
+    &nbsp; &nbsp;
+
+    <div class="form-group">
+        <label for="SelectedMonth">Month</label>
+        <select asp-for="SelectedMonth" asp-items="@(new SelectList(Model.PossibleMonths, "MonthNumber", "Name"))" name="month" class="form-control"></select>
+    </div>
+
+</form>
+
+<hr />
+<h2>Report for @Model.SelectedMonthName @Model.SelectedYear</h2>
+
+@if (Model.Report == null)
+{
+    <p>No data found for this period</p>
+}
+else
+{
+
+        
+
+    <pre>
+@(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Report, Newtonsoft.Json.Formatting.Indented))
+    </pre>
+}
+
+@section Scripts {
+<script>
+
+    $('#SelectedYear').on('change', function(event) {
+        var form = $(event.target).parents('form');
+        form.submit();
+    });
+
+    $('#SelectedMonth').on('change', function (event) {
+        var form = $(event.target).parents('form');
+        form.submit();
+    });
+
+</script>
+}

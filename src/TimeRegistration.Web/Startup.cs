@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TimeRegistration.BusinessLogic.Interfaces;
 using TimeRegistration.BusinessLogic.Repositories;
+using TimeRegistration.BusinessLogic.Services;
 
 namespace TimeRegistration.Web
 {
@@ -25,6 +26,7 @@ namespace TimeRegistration.Web
         {
             services.AddMvc();
             services.AddSingleton<IRepository, InMemoryRepository>();
+            services.AddTransient<IReportGeneratorService, ReportGeneratorService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

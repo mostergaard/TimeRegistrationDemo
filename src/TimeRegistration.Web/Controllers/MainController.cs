@@ -11,10 +11,12 @@ namespace TimeRegistration.Web.Controllers
     public class MainController : Controller
     {
         private IRepository repository;
+        private IReportGeneratorService reportGeneratorService;
 
-        public MainController(IRepository repository)
+        public MainController(IRepository repository, IReportGeneratorService reportGeneratorService)
         {
             this.repository = repository;
+            this.reportGeneratorService = reportGeneratorService;
         }
 
         public IActionResult Default()
@@ -22,9 +24,70 @@ namespace TimeRegistration.Web.Controllers
             return RedirectToAction("MonthOverview");
         }
 
-        public IActionResult MonthOverview()
+        public IActionResult MonthOverview(int year = 0, int month = 0)
         {
-            return View();
+            if (year == 0)
+            {
+                year = DateTime.Today.Year;
+            }
+
+            if (month == 0)
+            {
+                month = DateTime.Today.Month;
+            }
+
+            // TODO: Move to constructor and use english names
+            var monthNames = Enumerable.Range(1, 12).Select(x => new DateTime(2000, x, 1).ToString("MMMM")).ToArray();
+
+            var minDate = this.repository.GetEarliestRegistrationDate();
+            var maxDate = this.repository.GetLatestRegistrationDate();
+
+            // If we don't have any data, just return a empty report with the current month selected
+            if (minDate == null || maxDate == null)
+            {
+                return View(new MonthOverviewViewModel
+                {
+                    PossibleYears = new[] { year.ToString() },
+                    PossibleMonths = new[] { new PossibleMonth { MonthNumber = month, Name = monthNames[month - 1] } },
+                    SelectedYear = year,
+                    SelectedMonth = month,
+                    SelectedMonthName = monthNames[month-1],
+                    Report = null
+                });
+            }
+
+            // Get date to view report for that is within the range of used dates
+            var viewDate = new DateTime(year, month, 1);
+            if (viewDate < minDate)
+            {
+                viewDate = minDate.Value;
+            }
+            else if (viewDate > maxDate)
+            {
+                viewDate = maxDate.Value;
+            }
+
+            // For the selected year, get the months to display
+            var startMonth = new[] { minDate.Value, new DateTime(viewDate.Year, 1, 1) }.Max();
+            var endMonth = new[] { maxDate.Value, new DateTime(viewDate.Year, 12, 1) }.Min();
+
+            return View(new MonthOverviewViewModel
+            {
+                PossibleYears = Enumerable.Range(minDate.Value.Year, maxDate.Value.Year - minDate.Value.Year + 1)
+                    .Select(x => x.ToString())
+                    .ToArray(),
+                PossibleMonths = Enumerable.Range(startMonth.Month, endMonth.Month - startMonth.Month + 1)
+                    .Select(x => new PossibleMonth
+                        {
+                            Name = monthNames[x - 1],
+                            MonthNumber = x
+                        })
+                    .ToArray(),
+                SelectedYear = viewDate.Year,
+                SelectedMonth = viewDate.Month,
+                SelectedMonthName = monthNames[viewDate.Month - 1],
+                Report = this.reportGeneratorService.GetMonthReport(viewDate.Year, viewDate.Month)
+            });
         }
 
         public IActionResult Register()

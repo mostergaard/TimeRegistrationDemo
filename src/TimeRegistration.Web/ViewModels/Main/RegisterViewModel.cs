@@ -33,7 +33,6 @@ namespace TimeRegistration.Web.ViewModels.Main
 
         [Display(Name = "Notes")]
         [StringLength(200, ErrorMessage = "The {0} must be maximum {1} characters long.")]
-
         public string Notes { get; set; }
     }
 }
