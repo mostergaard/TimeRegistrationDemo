@@ -24,18 +24,61 @@
 <hr />
 <h2>Report for @Model.SelectedMonthName @Model.SelectedYear</h2>
 
-@if (Model.Report == null)
+@if (Model.Report == null || !Model.Report.Customers.Any())
 {
     <p>No data found for this period</p>
 }
 else
 {
+    <table class="table table-hover table-condensed">
 
-        
+    @foreach (var customer in Model.Report.Customers)
+    {
+        <tr class="success">
+            <th colspan="3">Customer: @customer.Name</th>
+            <th class="text-right">@customer.TotalDuration.TotalHours.ToString("f1") hours</th>
+        </tr>
 
-    <pre>
-@(Newtonsoft.Json.JsonConvert.SerializeObject(Model.Report, Newtonsoft.Json.Formatting.Indented))
-    </pre>
+        @foreach (var project in customer.Projects)
+        {
+
+        <tr class="info">
+            <th></th>
+            <th colspan="2">Project: @project.Name</th>
+            <th class="text-right">@project.TotalDuration.TotalHours.ToString("f1") hours</th>
+        </tr>
+
+            @foreach (var registration in project.Registrations)
+            {
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td>
+                @registration.Date.ToShortDateString()
+                @if (!string.IsNullOrWhiteSpace(registration.Notes))
+                {
+                    <br />
+                    <em>@registration.Notes</em>
+                }
+            </td>
+            <td class="text-right">@registration.Duration.TotalHours.ToString("f1") hours</td>
+        </tr>
+
+            }
+
+        }
+
+        <tr><td colspan="4"></td></tr>
+
+    }
+
+        <tr class="warning">
+            <td colspan="3"><b>Total:</b></td>
+            <td class="text-right"><b>@Model.Report.TotalDuration.TotalHours.ToString("f1") hours</b></td>
+        </tr>
+
+    </table>
 }
 
 @section Scripts {

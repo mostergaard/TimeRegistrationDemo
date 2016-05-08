@@ -76,6 +76,26 @@ namespace TimeRegistration.BusinessLogic.Repositories
                 this.customers.First().Projects.Last().ProjectId,
                 new Registration
                 {
+                    Date = new DateTime(2015, 3, 5),
+                    Duration = TimeSpan.FromHours(0.5),
+                    Notes = "Very little work on an old project"
+                });
+
+            AddRegistration(
+                this.customers.Last().CustomerId,
+                this.customers.Last().Projects.First().ProjectId,
+                new Registration
+                {
+                    Date = new DateTime(2015, 3, 7),
+                    Duration = TimeSpan.FromHours(1),
+                    Notes = "Some telephone support to a previous project."
+                });
+
+            AddRegistration(
+                this.customers.First().CustomerId,
+                this.customers.First().Projects.Last().ProjectId,
+                new Registration
+                {
                     Date = new DateTime(2015, 5, 2),
                     Duration = TimeSpan.FromHours(10)
                 });

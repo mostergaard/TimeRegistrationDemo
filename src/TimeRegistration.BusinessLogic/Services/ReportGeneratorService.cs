@@ -37,6 +37,7 @@ namespace TimeRegistration.BusinessLogic.Services
                     Registrations = customerGroup
                         .Where(x => x.ProjectId == project.ProjectId)
                         .Select(x => x.Registration)
+                        .OrderBy(x => x.Date)
                         .ToArray()
                 });
 
@@ -44,7 +45,7 @@ namespace TimeRegistration.BusinessLogic.Services
                 {
                     CustomerId = customer.CustomerId,
                     Name = customer.Name,
-                    Projects = projectReports.ToArray()
+                    Projects = projectReports.Where(x => x.Registrations.Length > 0).ToArray()
                 });
             }
 
@@ -52,7 +53,7 @@ namespace TimeRegistration.BusinessLogic.Services
             {
                 Year = year,
                 Month = month,
-                Customers = customerReports.ToArray()
+                Customers = customerReports.Where(x => x.Projects.Length > 0).ToArray()
             };
         }
     }
