@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TimeRegistration.BusinessLogic.Models;
 
 namespace TimeRegistration.BusinessLogic.Interfaces
 {
     public interface IRepository
     {
-        IEnumerable<Customer> GetAllCustomers();
+        Task<IEnumerable<Customer>> GetAllCustomers();
 
-        void AddRegistration(Guid customerId, Guid projectId, Registration registration);
-        
-        IList<RegistrationWithContext> GetRegistrationsForDateTimeRange(DateTime minDate, DateTime maxDate);
+        Task AddRegistration(Guid customerId, Guid projectId, Registration registration);
 
-        DateTime? GetEarliestRegistrationDate();
+        Task<IList<RegistrationWithContext>> GetRegistrationsForDateTimeRange(DateTime minDate, DateTime maxDate);
 
-        DateTime? GetLatestRegistrationDate();
+        Task<DateTime?> GetEarliestRegistrationDate();
+
+        Task<DateTime?> GetLatestRegistrationDate();
     }
 }

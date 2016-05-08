@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TimeRegistration.BusinessLogic.Interfaces;
 using TimeRegistration.BusinessLogic.Models;
 
@@ -15,13 +16,13 @@ namespace TimeRegistration.BusinessLogic.Services
             this.repository = repository;
         }
 
-        public MonthReport GetMonthReport(int year, int month)
+        public async Task<MonthReport> GetMonthReport(int year, int month)
         {
             // Load data from repository
             var minDate = new DateTime(year, month, 1);
             var maxDate = minDate.AddMonths(1).AddDays(-1);
-            var localRegistrations = this.repository.GetRegistrationsForDateTimeRange(minDate, maxDate);
-            var localCustomers = this.repository.GetAllCustomers();
+            var localRegistrations = await this.repository.GetRegistrationsForDateTimeRange(minDate, maxDate);
+            var localCustomers = await this.repository.GetAllCustomers();
             
             // Generate report
             var customerReports = new List<CustomerReport>();

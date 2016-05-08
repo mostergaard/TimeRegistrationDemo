@@ -28,7 +28,7 @@ namespace TimeRegistration.Web.Controllers
             return RedirectToAction("MonthOverview");
         }
 
-        public IActionResult MonthOverview(int year = 0, int month = 0)
+        public async Task<IActionResult> MonthOverview(int year = 0, int month = 0)
         {
             if (year == 0)
             {
@@ -40,8 +40,8 @@ namespace TimeRegistration.Web.Controllers
                 month = DateTime.Today.Month;
             }
 
-            var minDate = this.repository.GetEarliestRegistrationDate();
-            var maxDate = this.repository.GetLatestRegistrationDate();
+            var minDate = await this.repository.GetEarliestRegistrationDate();
+            var maxDate = await this.repository.GetLatestRegistrationDate();
 
             // If we don't have any data, just return a empty report with the current month selected
             if (minDate == null || maxDate == null)
@@ -87,13 +87,13 @@ namespace TimeRegistration.Web.Controllers
                 SelectedYear = viewDate.Year,
                 SelectedMonth = viewDate.Month,
                 SelectedMonthName = this.monthNames[viewDate.Month - 1],
-                Report = this.reportGeneratorService.GetMonthReport(viewDate.Year, viewDate.Month)
+                Report = await this.reportGeneratorService.GetMonthReport(viewDate.Year, viewDate.Month)
             });
         }
 
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
-            var customers = this.repository.GetAllCustomers().ToArray();
+            var customers = (await this.repository.GetAllCustomers()).ToArray();
 
             var model = new RegisterViewModel
             {
@@ -116,7 +116,7 @@ namespace TimeRegistration.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                this.repository.AddRegistration(model.CustomerId, model.ProjectId, new Registration
+                await this.repository.AddRegistration(model.CustomerId, model.ProjectId, new Registration
                 {
                     Date = model.Date,
                     Duration = TimeSpan.FromHours(model.Hours),
@@ -127,7 +127,7 @@ namespace TimeRegistration.Web.Controllers
             }
 
             // We have lost the list of possible selections, so rebuild
-            var customers = this.repository.GetAllCustomers().ToArray();
+            var customers = (await this.repository.GetAllCustomers()).ToArray();
             model.CustomersAndProjects = customers;
             model.AllCustomers = customers;
             model.AllProjects = customers.SelectMany(x => x.Projects).ToList();

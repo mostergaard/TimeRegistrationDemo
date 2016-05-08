@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TimeRegistration.BusinessLogic.Interfaces;
 using TimeRegistration.BusinessLogic.Models;
 
@@ -13,10 +14,12 @@ namespace TimeRegistration.BusinessLogic.Repositories
 
         public InMemoryRepository()
         {
-            CreateSampleData();
+            CreateSampleData().Wait();
         }
 
-        private void CreateSampleData()
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously. Not needed here, but will be used for real calls to DB
+
+        private async Task CreateSampleData()
         {
             this.customers.Add(new Customer
             {
@@ -51,7 +54,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                 }
             });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.First().CustomerId, 
                 this.customers.First().Projects.First().ProjectId,
                 new Registration
@@ -61,7 +64,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Notes = "Did some awesome work"
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.First().ProjectId,
                 new Registration
@@ -71,7 +74,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Notes = "Did some even more awesome work"
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
                 new Registration
@@ -81,7 +84,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Notes = "Very little work on an old project"
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.Last().CustomerId,
                 this.customers.Last().Projects.First().ProjectId,
                 new Registration
@@ -91,7 +94,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Notes = "Some telephone support to a previous project."
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
                 new Registration
@@ -100,7 +103,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Duration = TimeSpan.FromHours(10)
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
                 new Registration
@@ -109,7 +112,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
                     Duration = TimeSpan.FromHours(8)
                 });
 
-            AddRegistration(
+            await AddRegistration(
                 this.customers.Last().CustomerId,
                 this.customers.Last().Projects.First().ProjectId,
                 new Registration
@@ -120,13 +123,13 @@ namespace TimeRegistration.BusinessLogic.Repositories
                 });
         }
 
-        public IEnumerable<Customer> GetAllCustomers()
+        public async Task<IEnumerable<Customer>> GetAllCustomers()
         {
             // Note: No locking needed as the customers list is read-only right now
             return this.customers;
         }
 
-        public void AddRegistration(Guid customerId, Guid projectId, Registration registration)
+        public async Task AddRegistration(Guid customerId, Guid projectId, Registration registration)
         {
             // TODO: Validate that the customer id and project id are valid and that the project id exists under the customer!
             lock (this)
@@ -140,7 +143,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
             }
         }
 
-        public IList<RegistrationWithContext> GetRegistrationsForDateTimeRange(DateTime minDate, DateTime maxDate)
+        public async Task<IList<RegistrationWithContext>> GetRegistrationsForDateTimeRange(DateTime minDate, DateTime maxDate)
         {
             RegistrationWithContext[] result;
             lock (this)
@@ -153,7 +156,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
             return result;
         }
 
-        public DateTime? GetEarliestRegistrationDate()
+        public async Task<DateTime?> GetEarliestRegistrationDate()
         {
             lock (this)
             {
@@ -161,12 +164,14 @@ namespace TimeRegistration.BusinessLogic.Repositories
             }
         }
 
-        public DateTime? GetLatestRegistrationDate()
+        public async Task<DateTime?> GetLatestRegistrationDate()
         {
             lock (this)
             {
                 return this.registrations.OrderByDescending(x => x.Registration.Date).FirstOrDefault()?.Registration.Date;
             }
         }
+
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     }
 }
