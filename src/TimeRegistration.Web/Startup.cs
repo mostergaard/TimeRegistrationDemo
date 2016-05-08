@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using System.Globalization;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -43,6 +45,10 @@ namespace TimeRegistration.Web
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            // Force to only support English culture
+            var englishCulture =  CultureInfo.InvariantCulture;
+            app.UseRequestLocalization(new RequestLocalizationOptions() { SupportedCultures = new[] { englishCulture } }, new RequestCulture(CultureInfo.InvariantCulture));
 
             app.UseIISPlatformHandler();
             app.UseStaticFiles();

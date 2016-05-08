@@ -5,6 +5,8 @@ namespace TimeRegistration.WebTests
 {
     public class MainControllerTests
     {
+        // TODO: Add some actual tests!
+
         [Fact]
         public void PassingTest()
         {

@@ -98,6 +98,8 @@ namespace TimeRegistration.Web.Controllers
 
         public async Task<IActionResult> Register()
         {
+            // TODO: Add some jQuery magic on the page to refresh the list of possible projects per customer
+
             var customers = (await this.repository.GetAllCustomers()).ToArray();
 
             var model = new RegisterViewModel

@@ -28,7 +28,9 @@ namespace TimeRegistration.Web.ViewModels.Main
         public DateTime Date { get; set; }
 
         [Required]
+        [Range(0.01, 24)]
         [Display(Name = "Number of hours")]
+        [DisplayFormat(DataFormatString = "{0:F1}", ApplyFormatInEditMode = true)]
         public double Hours { get; set; }
 
         [Display(Name = "Notes")]
