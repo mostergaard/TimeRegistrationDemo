@@ -28,6 +28,11 @@ namespace TimeRegistration.Web.Controllers
             return RedirectToAction("MonthOverview");
         }
 
+        public IActionResult Error()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> MonthOverview(int year = 0, int month = 0)
         {
             if (year == 0)
