@@ -131,7 +131,28 @@ namespace TimeRegistration.BusinessLogic.Repositories
 
         public async Task AddRegistration(Guid customerId, Guid projectId, Registration registration)
         {
-            // TODO: Validate that the customer id and project id are valid and that the project id exists under the customer!
+            var customer = this.customers.FirstOrDefault(x => x.CustomerId == customerId);
+            if (customer == null)
+            {
+                throw new ArgumentException("Customer not found", nameof(customerId));
+            }
+
+            var project = customer.Projects.FirstOrDefault(x => x.ProjectId == projectId);
+            if (project == null)
+            {
+                throw new ArgumentException("Project not found on this customer", nameof(projectId));
+            }
+
+            if (registration == null)
+            {
+                throw new ArgumentNullException(nameof(registration));
+            }
+
+            if (registration.Duration.TotalMinutes <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(registration) + "." + nameof(registration.Duration), "Duration must at least 1 minute");
+            }
+
             lock (this)
             {
                 this.registrations.Add(new RegistrationWithContext
