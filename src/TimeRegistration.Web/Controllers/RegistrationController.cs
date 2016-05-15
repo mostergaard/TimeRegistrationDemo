@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using TimeRegistration.BusinessLogic.Interfaces;
 using TimeRegistration.BusinessLogic.Models;
-using TimeRegistration.Web.ViewModels.Main;
+using TimeRegistration.Web.ViewModels.Registration;
 
 namespace TimeRegistration.Web.Controllers
 {

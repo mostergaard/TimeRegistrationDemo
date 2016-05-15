@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TimeRegistration.BusinessLogic.Models;
 
-namespace TimeRegistration.Web.ViewModels.Main
+namespace TimeRegistration.Web.ViewModels.Registration
 {
     public class RegisterViewModel
     {
