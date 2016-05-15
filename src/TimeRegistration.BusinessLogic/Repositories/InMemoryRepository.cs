@@ -22,106 +22,78 @@ namespace TimeRegistration.BusinessLogic.Repositories
 
         private async Task CreateSampleData()
         {
-            this.customers.Add(new Customer
-            {
-                CustomerId = Guid.NewGuid(),
-                Name = "Danske Bank",
-                Projects = new[]
+            this.customers.Add(new Customer(
+                Guid.NewGuid(),
+                "Danske Bank",
+                new[]
                 {
-                    new Project
-                    {
-                        ProjectId = Guid.NewGuid(),
-                        Name = "MobilePay"
-                    },
-                    new Project
-                    {
-                        ProjectId = Guid.NewGuid(),
-                        Name = "Netbank"
-                    }
-                }
-            });
+                    new Project(Guid.NewGuid(), "MobilePay"),
+                    new Project(Guid.NewGuid(), "Netbank")
+                }));
 
-            this.customers.Add(new Customer
-            {
-                CustomerId = Guid.NewGuid(),
-                Name = "Københavns Lufthavn",
-                Projects = new[]
-                            {
-                    new Project
-                    {
-                        ProjectId = Guid.NewGuid(),
-                        Name = "Kursus intranet"
-                    }
-                }
-            });
-
-            await AddRegistration(
-                this.customers.First().CustomerId, 
-                this.customers.First().Projects.First().ProjectId,
-                new Registration
+            this.customers.Add(new Customer(
+                Guid.NewGuid(),
+                "Københavns Lufthavn",
+                new[]
                 {
-                    Date = new DateTime(2015, 3, 2),
-                    Duration = TimeSpan.FromHours(3),
-                    Notes = "Did some awesome work"
-                });
+                    new Project(Guid.NewGuid(), "Kursus intranet")
+                }));
 
             await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.First().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2015, 3, 4),
-                    Duration = TimeSpan.FromHours(5),
-                    Notes = "Did some even more awesome work"
-                });
+                new Registration(
+                    new DateTime(2015, 3, 2),
+                    TimeSpan.FromHours(3),
+                    "Did some awesome work"));
+
+            await AddRegistration(
+                this.customers.First().CustomerId,
+                this.customers.First().Projects.First().ProjectId,
+                new Registration(
+                    new DateTime(2015, 3, 4),
+                    TimeSpan.FromHours(5),
+                    "Did some even more awesome work"));
 
             await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2015, 3, 5),
-                    Duration = TimeSpan.FromHours(0.5),
-                    Notes = "Very little work on an old project"
-                });
+                new Registration(
+                    new DateTime(2015, 3, 5),
+                    TimeSpan.FromHours(0.5),
+                    "Very little work on an old project"));
 
             await AddRegistration(
                 this.customers.Last().CustomerId,
                 this.customers.Last().Projects.First().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2015, 3, 7),
-                    Duration = TimeSpan.FromHours(1),
-                    Notes = "Some telephone support to a previous project."
-                });
+                new Registration(
+                    new DateTime(2015, 3, 7),
+                    TimeSpan.FromHours(1),
+                    "Some telephone support to a previous project."));
 
             await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2015, 5, 2),
-                    Duration = TimeSpan.FromHours(10)
-                });
+                new Registration(
+                    new DateTime(2015, 5, 2),
+                    TimeSpan.FromHours(10),
+                    ""));
 
             await AddRegistration(
                 this.customers.First().CustomerId,
                 this.customers.First().Projects.Last().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2016, 2, 15),
-                    Duration = TimeSpan.FromHours(8)
-                });
+                new Registration(
+                    new DateTime(2016, 2, 15),
+                    TimeSpan.FromHours(8),
+                    ""));
 
             await AddRegistration(
                 this.customers.Last().CustomerId,
                 this.customers.Last().Projects.First().ProjectId,
-                new Registration
-                {
-                    Date = new DateTime(2016, 5, 1),
-                    Duration = TimeSpan.FromHours(20),
-                    Notes = "Many hours of development"
-                });
+                new Registration(
+                    new DateTime(2016, 5, 1),
+                    TimeSpan.FromHours(20),
+                    "Many hours of development"));
         }
 
         public async Task<Customer[]> GetAllCustomers()
@@ -156,12 +128,7 @@ namespace TimeRegistration.BusinessLogic.Repositories
 
             lock (this)
             {
-                this.registrations.Add(new RegistrationWithContext
-                {
-                    CustomerId = customerId,
-                    ProjectId = projectId,
-                    Registration = registration
-                });
+                this.registrations.Add(new RegistrationWithContext(customerId, projectId, registration));
             }
         }
 

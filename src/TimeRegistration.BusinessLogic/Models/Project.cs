@@ -4,8 +4,17 @@ namespace TimeRegistration.BusinessLogic.Models
 {
     public class Project
     {
-        public Guid ProjectId { get; set; }
+        private readonly Guid projectId;
+        private readonly string name;
 
-        public string Name { get; set; }
+        public Project(Guid projectId, string name)
+        {
+            this.projectId = projectId;
+            this.name = name;
+        }
+
+        public Guid ProjectId => this.projectId;
+
+        public string Name => this.name;
     }
 }

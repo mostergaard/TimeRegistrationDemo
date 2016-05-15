@@ -30,6 +30,11 @@ namespace TimeRegistration.WebTests
             this.reportGeneratorMock.Setup(x => x.GetMonthReport(reportRequestYear, reportRequestMonth)).Returns(Task.FromResult(reportResponse));
         }
 
+        private MonthReport GenerateDefaultMonthReport()
+        {
+            return new MonthReport(2015, 3, new CustomerReport[0]);
+        }
+
         private async Task<MonthOverviewViewModel> ExecuteAction(int year = 0, int month = 0)
         {
             var controller = new MainController(this.repositoryMock.Object, this.reportGeneratorMock.Object);
@@ -41,7 +46,7 @@ namespace TimeRegistration.WebTests
         [Fact]
         public async Task Defaulting_to_current_month()
         {
-            ConfigureMocks(DateTime.Today, DateTime.Today, DateTime.Today.Year, DateTime.Today.Month, new MonthReport());
+            ConfigureMocks(DateTime.Today, DateTime.Today, DateTime.Today.Year, DateTime.Today.Month, GenerateDefaultMonthReport());
             var viewModel = await ExecuteAction();
 
             Assert.Equal(DateTime.Today.Month, viewModel.SelectedMonth);
@@ -52,7 +57,7 @@ namespace TimeRegistration.WebTests
         [Fact]
         public async Task Moves_to_first_used_month()
         {
-            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2015, 5, 20), 2015, 3, new MonthReport());
+            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2015, 5, 20), 2015, 3, GenerateDefaultMonthReport());
             var viewModel = await ExecuteAction(2015, 2);
 
             Assert.Equal(3, viewModel.SelectedMonth);
@@ -65,7 +70,7 @@ namespace TimeRegistration.WebTests
         [Fact]
         public async Task Moves_to_last_used_month()
         {
-            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2015, 5, 20), 2015, 5, new MonthReport());
+            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2015, 5, 20), 2015, 5, GenerateDefaultMonthReport());
             var viewModel = await ExecuteAction(2015, 6);
 
             Assert.Equal(5, viewModel.SelectedMonth);
@@ -78,7 +83,7 @@ namespace TimeRegistration.WebTests
         [Fact]
         public async Task Month_list_to_end_of_year()
         {
-            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2016, 3, 20), 2015, 5, new MonthReport());
+            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2016, 3, 20), 2015, 5, GenerateDefaultMonthReport());
             var viewModel = await ExecuteAction(2015, 5);
 
             Assert.Equal(5, viewModel.SelectedMonth);
@@ -91,7 +96,7 @@ namespace TimeRegistration.WebTests
         [Fact]
         public async Task Month_list_from_start_of_year()
         {
-            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2016, 3, 20), 2016, 2, new MonthReport());
+            ConfigureMocks(new DateTime(2015, 3, 10), new DateTime(2016, 3, 20), 2016, 2, GenerateDefaultMonthReport());
             var viewModel = await ExecuteAction(2016, 2);
 
             Assert.Equal(2, viewModel.SelectedMonth);

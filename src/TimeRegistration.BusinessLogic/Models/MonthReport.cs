@@ -1,24 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace TimeRegistration.BusinessLogic.Models
 {
     public class MonthReport
     {
-        public int Year { get; set; }
+        private readonly int year;
+        private readonly int month;
+        private readonly CustomerReport[] customers;
 
-        public int Month { get; set; }
-
-        public CustomerReport[] Customers { get; set; }
-
-        public TimeSpan TotalDuration
+        public MonthReport(int year, int month, CustomerReport[] customers)
         {
-            get
-            {
-                return TimeSpan.FromMinutes(Customers.Sum(x => x.TotalDuration.TotalMinutes));
-            }
+            this.year = year;
+            this.month = month;
+            this.customers = customers;
         }
+
+        public int Year => this.year;
+
+        public int Month => this.month;
+
+        public CustomerReport[] Customers => this.customers;
+
+        public TimeSpan TotalDuration => TimeSpan.FromMinutes(Customers.Sum(x => x.TotalDuration.TotalMinutes));
     }
 }

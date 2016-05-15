@@ -31,31 +31,22 @@ namespace TimeRegistration.BusinessLogic.Services
             {
                 var customer = customers.First(x => x.CustomerId == customerGroup.Key);
 
-                var projectReports = customer.Projects.Select(project => new ProjectReport
-                {
-                    ProjectId = project.ProjectId,
-                    Name = project.Name,
-                    Registrations = customerGroup
+                var projectReports = customer.Projects.Select(project => new ProjectReport(
+                    project.ProjectId,
+                    project.Name,
+                    customerGroup
                         .Where(x => x.ProjectId == project.ProjectId)
                         .Select(x => x.Registration)
                         .OrderBy(x => x.Date)
-                        .ToArray()
-                });
+                        .ToArray()));
 
-                customerReports.Add(new CustomerReport
-                {
-                    CustomerId = customer.CustomerId,
-                    Name = customer.Name,
-                    Projects = projectReports.Where(x => x.Registrations.Length > 0).ToArray()
-                });
+                customerReports.Add(new CustomerReport(
+                    customer.CustomerId,
+                    customer.Name,
+                    projectReports.Where(x => x.Registrations.Length > 0).ToArray()));
             }
 
-            return new MonthReport
-            {
-                Year = year,
-                Month = month,
-                Customers = customerReports.Where(x => x.Projects.Length > 0).ToArray()
-            };
+            return new MonthReport(year, month, customerReports.Where(x => x.Projects.Length > 0).ToArray());
         }
     }
 }

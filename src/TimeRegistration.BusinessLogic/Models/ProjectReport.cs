@@ -5,18 +5,23 @@ namespace TimeRegistration.BusinessLogic.Models
 {
     public class ProjectReport
     {
-        public Guid ProjectId { get; set; }
+        private readonly Guid projectId;
+        private readonly string name;
+        private readonly Registration[] registrations;
 
-        public string Name { get; set; }
-
-        public Registration[] Registrations { get; set; }
-
-        public TimeSpan TotalDuration
+        public ProjectReport(Guid projectId, string name, Registration[] registrations)
         {
-            get
-            {
-                return TimeSpan.FromMinutes(Registrations.Sum(x => x.Duration.TotalMinutes));
-            }
+            this.projectId = projectId;
+            this.name = name;
+            this.registrations = registrations;
         }
+
+        public Guid ProjectId => this.projectId;
+
+        public string Name => this.name;
+
+        public Registration[] Registrations => this.registrations;
+
+        public TimeSpan TotalDuration => TimeSpan.FromMinutes(Registrations.Sum(x => x.Duration.TotalMinutes));
     }
 }

@@ -4,10 +4,21 @@ namespace TimeRegistration.BusinessLogic.Models
 {
     public class Registration
     {
-        public DateTime Date { get; set; }
+        private readonly DateTime date;
+        private readonly TimeSpan duration;
+        private readonly string notes;
 
-        public TimeSpan Duration { get; set; }
+        public Registration(DateTime date, TimeSpan duration, string notes)
+        {
+            this.date = date;
+            this.duration = duration;
+            this.notes = notes;
+        }
 
-        public string Notes { get; set; }
+        public DateTime Date => this.date;
+
+        public TimeSpan Duration => this.duration;
+
+        public string Notes => this.notes;
     }
 }

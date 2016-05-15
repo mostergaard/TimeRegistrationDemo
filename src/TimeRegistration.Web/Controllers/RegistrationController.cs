@@ -41,12 +41,10 @@ namespace TimeRegistration.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                await this.repository.AddRegistration(model.CustomerId, model.ProjectId, new Registration
-                {
-                    Date = model.Date,
-                    Duration = TimeSpan.FromHours(model.Hours),
-                    Notes = model.Notes
-                });
+                await this.repository.AddRegistration(model.CustomerId, model.ProjectId, new Registration(
+                    model.Date,
+                    TimeSpan.FromHours(model.Hours),
+                    model.Notes));
 
                 return RedirectToAction("MonthOverview", "Main");
             }

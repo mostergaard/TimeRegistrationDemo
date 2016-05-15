@@ -4,10 +4,21 @@ namespace TimeRegistration.BusinessLogic.Models
 {
     public class Customer
     {
-        public Guid CustomerId { get; set; }
+        private readonly Guid customerId;
+        private readonly string name;
+        private readonly Project[] projects;
 
-        public string Name { get; set; }
+        public Customer(Guid customerId, string name, Project[] projects)
+        {
+            this.customerId = customerId;
+            this.name = name;
+            this.projects = projects;
+        }
 
-        public Project[] Projects { get; set; }
+        public Guid CustomerId => this.customerId;
+
+        public string Name => this.name;
+
+        public Project[] Projects => this.projects;
     }
 }

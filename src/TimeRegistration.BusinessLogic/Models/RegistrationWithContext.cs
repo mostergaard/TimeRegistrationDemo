@@ -4,10 +4,21 @@ namespace TimeRegistration.BusinessLogic.Models
 {
     public class RegistrationWithContext
     {
-        public Guid CustomerId { get; set; }
+        private readonly Guid customerId;
+        private readonly Guid projectId;
+        private readonly Registration registration;
 
-        public Guid ProjectId { get; set; }
+        public RegistrationWithContext(Guid customerId, Guid projectId, Registration registration)
+        {
+            this.customerId = customerId;
+            this.projectId = projectId;
+            this.registration = registration;
+        }
 
-        public Registration Registration { get; set; }
+        public Guid CustomerId => this.customerId;
+
+        public Guid ProjectId => this.projectId;
+
+        public Registration Registration => this.registration;
     }
 }
