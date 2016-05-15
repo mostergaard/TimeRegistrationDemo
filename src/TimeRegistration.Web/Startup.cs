@@ -52,13 +52,7 @@ namespace TimeRegistration.Web
 
             app.UseIISPlatformHandler();
             app.UseStaticFiles();
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{action}",
-                    defaults: new {controller = "Main", action = "Default"});
-            });
+            app.UseMvc();
         }
 
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
